@@ -4,6 +4,24 @@ app.controller('MainController', ['$scope', function($scope) {
   $scope.flights = [];
   $scope.hotels = [];
   $scope.cars = [];
+  $scope.clearFlightForm = function(flight){
+    flight.start_date = '';
+    flight.end_date = '';
+    flight.from = '';
+    flight.to = '';
+  };
+  $scope.clearHotelForm = function(hotel){
+    hotel.start_date = '';
+    hotel.end_date = '';
+    hotel.amenities = '';
+    hotel.location = '';
+  };
+  $scope.clearCarForm = function(car){
+    car.start_date = '';
+    car.end_date = '';
+    car.type = '';
+    car.location = '';
+  };
   $scope.searchFlights = function(flight){
     $scope.flights.push(flight);
     $scope.action_status = 'flights_search';
@@ -44,3 +62,4 @@ app.controller('MainController', ['$scope', function($scope) {
   $scope.cars.splice( index, 1 )
   };
 }]);
+
