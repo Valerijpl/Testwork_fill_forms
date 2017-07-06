@@ -1,0 +1,171 @@
+<html>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.js"></script>
+  <script src="app.js"></script>
+  <script src="MainController.js"></script>
+  <script src="Script.js"></script>
+  <link href="main.css" rel="stylesheet" />
+</head>
+<body>
+  <body ng-app="myApp">
+   <div class="header">
+   </div>
+     <div class="container">
+       <h1>Search for some objects</h1>
+     </div>
+   </div>
+
+   <div class="main" ng-controller="MainController">
+     <div class="container">
+       <h1>{{ title }}</h1>
+     </div>
+     <div class="container">
+       <div class="row">
+         <div class="col-sm-3 col-md-2 sidebar" style="background-color: 	#DCDCDC">
+          <ul class="nav nav-sidebar">
+            <li><a ng-click="selectFlights()"><i class="fa fa-plane" aria-hidden="true"></i> Flights</a></li>
+            <li><a ng-click="selectHotels()"><i class="fa fa-hotel" aria-hidden="true"></i> Hotels</a></li>
+            <li><a ng-click="selectCars()"><i class="fa fa-car" aria-hidden="true"></i> Cars</a></li>
+          </ul>
+        </div>
+        <div class="col-sm-5 col-md-8 col-sm-offset-2 col-md-offset-1">
+          <form ng-if="action_status == 'flights_form'">
+            <div class="form-group">
+              <div style="display: inline;float: left">
+                <label for="date">Start date:</label>
+                <input type="text" ng-model="flight.start_date" class="form-control">
+              </div>
+              <div style="display: inline;float: right;margin-left: 10px">
+                <label for="date">End date:</label>
+                <input type="text" ng-model="flight.end_date" class="form-control">
+              </div>
+            </div>
+            <div class="form-group">
+              <label style="margin-top: 10px" for="from">From:</label>
+              <input type="text" ng-model="flight.from" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="from">To:</label>
+              <input type="text" ng-model="flight.to" class="form-control">
+            </div>
+            <div class="form-group">
+              <button class="btn btn-primary" ng-click="searchFlights(flight)">search</button>
+            </div>
+          </form>
+          <div ng-if="action_status == 'flights_search'">
+            <h2>There is no data in our system</h2>
+            <button ng-click="selectFlights()" class="btn btn-primary">get back</button>
+          </div>
+          <div ng-if="action_status == 'flights_form'">
+              <h3>Previous results:</h3>
+              <div ng-repeat="previous_flight in flights">
+                <div class="row">
+                  <p><i class="fa fa-undo" aria-hidden="true"></i> {{previous_flight.from}}
+                  <i class="fa fa-arrow-right" aria-hidden="true"></i>{{previous_flight.to}}
+                     Start date: {{previous_flight.start_date}}
+                     End date: {{previous_flight.end_date}}
+                   <button class="btn-danger btn" ng-click="RemoveFlight(flight)">clear</button></p>
+                </div>
+              </div>
+          </div>
+          <form ng-if="action_status == 'hotels_form'">
+            <div class="form-group">
+              <div style="display: inline;float: left">
+                <label for="date">Start date:</label>
+                <input type="text" ng-model="hotel.start_date" class="form-control">
+              </div>
+              <div style="display: inline;float: right;margin-left: 10px">
+                <label for="date">End date:</label>
+                <input type="text" ng-model="hotel.end_date" class="form-control">
+              </div>
+            </div>
+            <div class="form-group">
+              <label style="margin-top: 10px" for="amenities">Amenities:</label>
+              <select ng-model="hotel.amenities" class="form-control">
+                <option value="1"><span>☆</span></option>
+                <option value="2"><span>☆</span><span>☆</span></option>
+                <option value="3"><span>☆</span><span>☆</span><span>☆</span></option>
+                <option value="4 or more"><span>☆</span><span>☆</span><span>☆</span><span>☆</span> or more</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="location">Location:</label>
+              <input ng-model="hotel.location" type="text" class="form-control">
+            </div>
+            <div class="form-group">
+              <button ng-click="searchHotels(hotel)" class="btn btn-primary">search</button>
+            </div>
+          </form>
+          <div ng-if="action_status == 'hotels_search'">
+            <h2>There is no data in our system</h2>
+            <button ng-click="selectHotels()" class="btn btn-primary">get back</button>
+          </div>
+          <div ng-if="action_status == 'hotels_form'">
+              <h3>Previous results:</h3>
+              <div ng-repeat="previous_hotel in hotels">
+                <div class="row">
+                  <p><i class="fa fa-undo" aria-hidden="true"></i> <span ng-show="previous_hotel.amenities == '1'"><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span ng-show="previous_hotel.amenities == '2'"><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span ng-show="previous_hotel.amenities == '3'"><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span ng-show="previous_hotel.amenities == '4 or more'"><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-plus" aria-hidden="true"></i></span>
+                    Location: {{previous_hotel.location}} Start date: {{previous_hotel.start_date}} End date: {{previous_hotel.end_date}}
+                  <button class="btn-danger btn" ng-click="RemoveHotel(hotel)">clear</button></p>
+                </div>
+              </div>
+          </div>
+          <form ng-if="action_status == 'cars_form'">
+            <div class="form-group">
+              <div style="display: inline;float: left">
+                <label for="date">Start date:</label>
+                <input type="text" ng-model="car.start_date" class="form-control">
+              </div>
+              <div style="display: inline;float: right;margin-left: 10px">
+                <label for="date">End date:</label>
+                <input type="text" ng-model="car.end_date" class="form-control">
+              </div>
+            </div>
+            <div class="form-group">
+              <label style="margin-top: 10px" for="type">Type:</label>
+              <select ng-model="car.type" class="form-control">
+                <option>Economy</option>
+                <option>Business</option>
+                <option>Large</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="location">Location:</label>
+              <input ng-model="car.location" type="text" class="form-control">
+            </div>
+            <div class="form-group">
+              <button class="btn btn-primary" ng-click="searchCars(car)">search</button>
+            </div>
+          </form>
+          <div ng-if="action_status == 'cars_search'">
+            <h2>There is no data in our system</h2>
+            <button ng-click="selectCars()" class="btn btn-primary">get back</button>
+          </div>
+          <div ng-if="action_status == 'cars_form'">
+              <h3>Previous results:</h3>
+              <div ng-repeat="previous_car in cars">
+                <div class="row">
+                  <p><i class="fa fa-undo" aria-hidden="true"></i> Type: {{previous_car.type}}
+                   Location: {{previous_car.location}} Start date: {{previous_car.start_date}} End date: {{previous_car.end_date}}
+                 <button class="btn-danger btn" ng-click="RemoveCar(car)">clear</button></p>
+                </div>
+              </div>
+          </div>
+        </div>
+  </div>
+
+
+   <div class="footer">
+     <div class="container">
+     </div>
+   </div>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular-route.min.js"></script>
+</body>
+</html>
